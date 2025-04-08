@@ -5,12 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "CUDA C/C++: build and debug active file",
+            "name": "CUDA: DEBUG",
             "type": "cuda-gdb",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "program": "${fileDirname}/bin/${fileBasenameNoExtension}",
             "stopAtEntry": false,
-            "preLaunchTask": "CUDA C/C++: BUILD active file",
-        }
+            "preLaunchTask": "CUDA: BUILD",
+            "cwd": "${fileDirname}",
+        },
     ]
 }
