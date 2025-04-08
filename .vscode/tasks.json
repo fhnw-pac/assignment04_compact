@@ -2,8 +2,47 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Create bin",
             "type": "shell",
-            "label": "CUDA C/C++: BUILD active file",
+            "command": "mkdir",
+            "args": [
+                "-p",
+                "${fileDirname}/bin"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Delete old bin",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "-f",
+                "bin/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Delete old bin (optimized)",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "-f",
+                "bin/${fileBasenameNoExtension}_optimized"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "CUDA: BUILD",
             "command": "nvcc",
             "args": [
                 "-g",
@@ -12,42 +51,66 @@
                 "g++",
                 "-m64",
                 "-gencode",
-                "arch=compute_52,code=sm_52",
-                "-gencode",
-                "arch=compute_60,code=sm_60",
-                "-gencode",
-                "arch=compute_61,code=sm_61",
-                "-gencode",
-                "arch=compute_70,code=sm_70",
-                "-gencode",
                 "arch=compute_75,code=sm_75",
-                "-gencode",
-                "arch=compute_80,code=sm_80",
-                "${file}",
-                "-I${workspaceFolder}/Common",
+                "${fileBasenameNoExtension}.cu",
+                "-I../Common",
+                //"--default-stream","per-thread",
+                "-Xcompiler","-fopenmp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "bin/${fileBasenameNoExtension}"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${fileDirname}"
             },
             "problemMatcher": ["$gcc"],
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "dependsOn": ["Delete old bin", "Create bin"],
         },
         {
-            "label": "CUDA C/C++: RUN active file",
             "type": "shell",
-            "command": "${fileDirname}/${fileBasenameNoExtension}",
-            "dependsOn": [
-                "CUDA C/C++: BUILD active file"
+            "label": "CUDA: BUILD (optimized)",
+            "command": "nvcc",
+            "args": [
+                "-ccbin",
+                "g++",
+                "-m64",
+                "-gencode",
+                "arch=compute_75,code=sm_75",
+                "${fileBasenameNoExtension}.cu",
+                "-I../Common",
+                "-O3",
+                "--generate-line-info",
+                //"--default-stream","per-thread",
+                "-Xcompiler","-fopenmp",
+                "-o",
+                "bin/${fileBasenameNoExtension}_optimized"
             ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": ["Delete old bin (optimized)", "Create bin"],
+        },
+        {
+            "label": "CUDA: RUN",
+            "command": "./bin/${fileBasenameNoExtension}_optimized",
+            "dependsOn": [
+                "CUDA: BUILD (optimized)"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
             "problemMatcher": ["$gcc"]
         },
         {
-            "label": "CUDA C/C++: PROFILE (nsys) active file",
+            "label": "CUDA: PROFILE (nsys)",
             "type": "shell",
             "command": "nsys",
             "args": [
@@ -55,28 +118,31 @@
                 "-f",
                 "true",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}",
+                "${fileBasenameNoExtension}",
                 "-t",
-                "cuda",
+                "cuda,openmp",
                 "--stats",
                 "true",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "bin/${fileBasenameNoExtension}_optimized"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "dependsOn": [
+                "CUDA: BUILD (optimized)"
             ],
             "problemMatcher": []
         },
         {
-            "label": "CUDA C/C++: PROFILE (ncu) active file",
+            "label": "CUDA: PROFILE (ncu)",
             "type": "process",
             "command": "ncu",
             "args": [
                 "-f",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}",
-                "--details-all",
+                "${fileBasenameNoExtension}",
                 "--print-summary",
                 "per-kernel",
-                "--metrics",
-                "all",
                 "--section",
                 "ComputeWorkloadAnalysis",
                 "--section",
@@ -105,7 +171,13 @@
                 "SourceCounters",
                 "--target-processes",
                 "all",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "bin/${fileBasenameNoExtension}_optimized"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "dependsOn": [
+                "CUDA: BUILD (optimized)"
             ],
             "problemMatcher": []
         }
