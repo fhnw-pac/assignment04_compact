@@ -4,6 +4,7 @@ Sie sollen das Compact Pattern implementieren, welches alle Primzahlen des Input
 
 ### Folgende Vorgaben gelten: 
     Verwenden Sie die Struktur und Helper-Funktionen der bereits eigeführten CUDA Beispielen. 
+    Es dürfen keine weiteren Libraries verwendet werden.
 
 ### Punkte werden vergeben: 
 
