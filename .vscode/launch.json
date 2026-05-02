@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": "CUDA: DEBUG",
             "type": "cuda-gdb",
@@ -12,6 +13,16 @@
             "stopAtEntry": false,
             "preLaunchTask": "CUDA: BUILD",
             "cwd": "${fileDirname}",
+            "environment": [
+                {
+                    "name": "SLURM_JOB_GPUS",
+                    "value": "3" // We use GPU 3 for debugging. GPU 0-2 are used by nvshare for all other tasks
+                },
+                {
+                    "name": "CUDA_VISIBLE_DEVICES",
+                    "value": "3"
+                }
+            ]
         },
     ]
 }
