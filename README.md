@@ -15,9 +15,8 @@ Implementierungen
 * 3½P für eine Implementation, welche 256-mal die Daten mittels compact neu ordnet. Pro Iteration/Ausführung soll ein anderes Datenset verwendet werden (ändern des Seeds). Die Implementation muss auf GPU Streams zurückgreifen, um weitere Parallelität zu erreichen. Die Daten (In- und Output) pro Iteration müssen nicht im Memory gehalten werden und können nach einer erfolgreichen Iteration verworfen/überschrieben werden. 
 
 Dokumentation 
-* ½P für die sinnvolle Untersuchungen/Messungen mit den CUDA Profiling Tools und deren Analyse. Ein sauberes Zeit-Profiling aller gewählten Ansätze (ebenso vs CPU Code). Unterscheiden Sie zwischen Init-Aufwand und der wiederholten Ausführung des Codes/der Kernel. 
-*  ½P für eine saubere Dokumentation der verwendeten Ansätze und des allgemeinen Aufbaus des Codes. Sowie sinnvollen Schlussfolgerungen der erarbeiteten Resultate. 
+* 1P für die sinnvolle Untersuchungen/Messungen mit den CUDA Profiling Tools und deren Analyse. Ein sauberes Zeit-Profiling aller gewählten Ansätze (ebenso vs CPU Code). Unterscheiden Sie zwischen Init-Aufwand und der wiederholten Ausführung des Codes/der Kernel.  
 
-**Falls keine oder eine unzureichende Dokumentation zum Code abgegeben wird, gehe ich davon aus, dass der Code abgeschrieben / mittels LLMs erstellt wurde. In diesem Fall werden keine Punkte vergeben.**
+**Code und Dokumentation müssen in einem mündlichen Portfoliogespräch erklärt werden. Ent-spricht der Wissenstand und die Erklärungen nicht der Abgabe, werden keine Punkte vergeben.**
 
 Die Abgabe erfolgt über einen Pull Request. Erstellen Sie am besten zu Beginn einen «dev» Branch, vom welchem Sie dann in den main einen Pull Request erstellen. Laden sie den Dozenten (Simon Marcin) als Reviewer in den Pull Request ein.   
